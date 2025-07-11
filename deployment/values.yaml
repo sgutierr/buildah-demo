@@ -1,0 +1,4 @@
+demo:
+  component-id: test
+  source-url: https://github.com/sgutierr/simplestdockerfile.git
+  namespace: buildah-demo
