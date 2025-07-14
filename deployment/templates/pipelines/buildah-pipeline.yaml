@@ -102,7 +102,7 @@ spec:
       description: reference of the image that will get created
       name: output-image
       type: string
-    - default: {{ .Values.demo.component-id }}
+    - default: {{ .Values.demo.componentid }}
       description: the component id
       name: component-id
       type: string
