@@ -6,12 +6,11 @@ metadata:
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: buildah-demo
   project: default
   source:
     path: deployment
     repoURL: 'https://github.com/sgutierr/buildah-demo.git'
-    targetRevision: main
+    targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
