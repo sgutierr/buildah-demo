@@ -1,0 +1,112 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: buildah-pipeline
+  namespace: {{ .Values.demo.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"    
+spec:
+  finally:
+    - name: my-buildah
+      params:
+        - name: IMAGE
+          value: $(params.component-id):latest
+        - name: BUILDER_IMAGE
+          value: quay.io/buildah/stable:v1.17.0
+        - name: STORAGE_DRIVER
+          value: vfs
+        - name: DOCKERFILE
+          value: ./Dockerfile
+        - name: CONTEXT
+          value: .
+        - name: TLSVERIFY
+          value: 'false'
+        - name: FORMAT
+          value: oci
+        - name: BUILD_EXTRA_ARGS
+          value: '--debug'
+        - name: IMAGE_ORIGIN
+          value: localhost
+        - name: IMAGE_TARGET
+          value: image-registry.openshift-image-registry.svc:5000/$(params.namespace)/$(params.component-id):latest
+        - name: PUSH_EXTRA_ARGS
+          value: '--debug'
+      taskRef:
+        kind: Task  
+        name: buildah-custom-task
+      workspaces:
+        - name: source
+          workspace: source-folder
+        - name: dockerconfig
+          workspace: dockerconfig
+  tasks:
+    - name: git-clone
+      params:
+        - name: CRT_FILENAME
+          value: ca-bundle.crt
+        - name: HTTP_PROXY
+          value: ''
+        - name: HTTPS_PROXY
+          value: ''
+        - name: NO_PROXY
+          value: ''
+        - name: SUBDIRECTORY
+          value: ''
+        - name: USER_HOME
+          value: /home/git
+        - name: DELETE_EXISTING
+          value: 'true'
+        - name: VERBOSE
+          value: 'false'
+        - name: SSL_VERIFY
+          value: 'false'
+        - name: URL
+          value: $(params.source-repo)
+        - name: REVISION
+          value: $(params.source-branch)
+        - name: REFSPEC
+          value: ''
+        - name: SUBMODULES
+          value: 'true'
+        - name: DEPTH
+          value: '1'
+        - name: SPARSE_CHECKOUT_DIRECTORIES
+          value: ''
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: output
+          workspace: source-folder
+  workspaces:
+    - name: source-folder
+      optional: false
+    - name: dockerconfig
+      optional: false
+  params:
+    - default: '{{ .Values.demo.source-url }}'
+      description: source repo that contains the application code
+      name: source-repo
+      type: string
+    - default: main
+      description: source branch to build from
+      name: source-branch
+      type: string
+    - default: 'image-registry.openshift-image-registry.svc:5000'
+      description: reference of the image that will get created
+      name: output-image
+      type: string
+    - default: {{ .Values.demo.component-id }}
+      description: the component id
+      name: component-id
+      type: string
+    - default: {{ .Values.demo.namespace }}
+      description: namespace
+      name: namespace
+      type: string
