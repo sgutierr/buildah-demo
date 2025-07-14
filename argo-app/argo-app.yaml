@@ -3,10 +3,6 @@ kind: Application
 metadata:
   name: buildah-demo-app
   namespace: openshift-gitops
-  labels:
-    argocd/app-name: buildah-demo-app
-  annotations:
-    argocd/app-name: buildah-demo-app
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
@@ -15,7 +11,7 @@ spec:
   source:
     path: deployment
     repoURL: 'https://github.com/sgutierr/buildah-demo.git'
-    targetRevision: HEAD
+    targetRevision: main
   syncPolicy:
     automated:
       prune: true
