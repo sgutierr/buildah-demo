@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demo-deploy
+  name: buildah-demo-app
   namespace: openshift-gitops
   labels:
     argocd/app-name: buildah-demo-app
@@ -10,13 +10,14 @@ metadata:
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
+    namespace: buildah-demo
   project: default
   source:
     helm:
       parameters:
         - name: namespace
-          value: <here-goes-which-namespace-will-use>
-    path: ./deployment
+          value: buildah-demo
+    path: deployment/
     repoURL: 'https://github.com/sgutierr/buildah-demo.git'
     targetRevision: HEAD
   syncPolicy:
@@ -31,3 +32,5 @@ spec:
       limit: 10
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true    
