@@ -1,4 +1,0 @@
-apiVersion: v2
-name: buildah-demo-chart
-version: 0.1.0
-description: A Helm chart for deploying the whole demo

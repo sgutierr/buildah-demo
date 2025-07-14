@@ -3,6 +3,6 @@ kind: Namespace
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-    openshift.io/description: buildah-demo
+    openshift.io/description: {{ .Values.demo.namespace }}
     openshift.io/display-name: buildah-demo
   name: buildah-demo
