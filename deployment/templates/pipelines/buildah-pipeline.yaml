@@ -90,7 +90,7 @@ spec:
     - name: dockerconfig
       optional: false
   params:
-    - default: '{{ .Values.demo.source-url }}'
+    - default: {{ .Values.demo.source-url }}
       description: source repo that contains the application code
       name: source-repo
       type: string
