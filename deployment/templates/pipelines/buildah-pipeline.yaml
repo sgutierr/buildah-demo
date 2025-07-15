@@ -37,8 +37,6 @@ spec:
       workspaces:
         - name: source
           workspace: source-folder
-        - name: dockerconfig
-          workspace: dockerconfig
   tasks:
     - name: git-clone
       params:
@@ -86,8 +84,6 @@ spec:
           workspace: source-folder
   workspaces:
     - name: source-folder
-      optional: false
-    - name: dockerconfig
       optional: false
   params:
     - default: {{ .Values.demo.sourceurl }}

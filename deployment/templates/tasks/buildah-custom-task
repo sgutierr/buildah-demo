@@ -69,7 +69,7 @@ spec:
           -f $(params.DOCKERFILE) -t $(params.IMAGE) $(params.CONTEXT)  
         echo "Running PUSH"   
         buildah --storage-driver=$(params.STORAGE_DRIVER) push \
-        $(params.PUSH_EXTRA_ARGS) --tls-verify=$(params.TLSVERIFY) --authfile=/workspace/dockerconfig/auth.json \
+        $(params.PUSH_EXTRA_ARGS) --tls-verify=$(params.TLSVERIFY) \
         --digestfile $(workspaces.source.path)/image-digest $(params.IMAGE_ORIGIN)/$(params.IMAGE) \
         docker://$(params.IMAGE_TARGET)             
       securityContext:
@@ -87,5 +87,3 @@ spec:
       name: varlibcontainers
   workspaces:
     - name: source
-    - description: Includes a docker `config.json`
-      name: dockerconfig
